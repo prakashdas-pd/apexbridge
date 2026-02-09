@@ -1,0 +1,11 @@
+# Logo Instructions
+
+Please place your logo image in this folder as `logo.png`.
+
+The logo should be:
+- Width: 48px (for header) 
+- Height: 48px (for header)
+- Format: PNG with transparent background
+- High resolution for crisp display
+
+The website will automatically optimize and scale the logo appropriately.
