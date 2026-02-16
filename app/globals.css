@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #181818;
@@ -13,6 +17,24 @@
   --muted-foreground: #6b7280;
   --border: #e5e7eb;
   --input: #ffffff;
+  --ring: #0176d3;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+}
+
+.dark {
+  --background: #111827;
+  --foreground: #f9fafb;
+  --primary: #0176d3;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f9fafb;
+  --accent: #1e3a8a;
+  --accent-foreground: #93c5fd;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --border: #374151;
+  --input: #1f2937;
   --ring: #0176d3;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
@@ -38,23 +60,6 @@
   --font-mono: var(--font-geist-mono), 'Fira Code', 'Monaco', 'Cascadia Code', 'Segoe UI Mono', 'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro', 'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --primary: #0288d1;
-    --primary-foreground: #ffffff;
-    --secondary: #1f2937;
-    --secondary-foreground: #f9fafb;
-    --accent: #1e3a8a;
-    --accent-foreground: #93c5fd;
-    --muted: #1f2937;
-    --muted-foreground: #9ca3af;
-    --border: #374151;
-    --input: #1f2937;
-    --ring: #0288d1;
-  }
-}
 
 body {
   background: var(--background);
@@ -160,9 +165,9 @@ html {
 
 /* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(1, 118, 211, 0.2);
 }
 
 /* Premium gradients */
@@ -185,6 +190,56 @@ html {
 /* Smooth transitions */
 * {
   transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 3D Animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 100% 50%; }
+  50% { background-position: 100% 100%; }
+  75% { background-position: 0% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float3d {
+  0%, 100% { transform: translateZ(0px) translateY(0px); }
+  25% { transform: translateZ(-20px) translateY(-10px); }
+  50% { transform: translateZ(0px) translateY(-20px); }
+  75% { transform: translateZ(20px) translateY(-10px); }
+}
+
+@keyframes rotate3d {
+  0% { transform: rotateX(0deg) rotateY(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+@keyframes pulse3d {
+  0%, 100% { 
+    transform: scale(1) translateZ(0px);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: scale(1.1) translateZ(10px);
+    opacity: 1;
+  }
+}
+
+/* 3D Effects */
+.image-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.floating-element {
+  animation: float3d 6s ease-in-out infinite;
+}
+
+.rotating-element {
+  animation: rotate3d 10s linear infinite;
+}
+
+.pulsing-element {
+  animation: pulse3d 2s ease-in-out infinite;
 }
 
 /* Custom scrollbar */

@@ -2,248 +2,313 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Menu, X, ChevronDown } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from '@/components/ui/button'
+import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Logo from './logo'
 
 const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'About Us', href: '/about' },
-  { name: 'Services', href: '/services' },
   { 
-    name: 'Roles', 
-    href: '/roles',
+    name: 'About Us', 
+    href: '/about',
+    // description: 'Learn about Apex Bridge Solutions - Your trusted IT partner for 10+ years',
+    icon: '🏢'
+  },
+  { 
+    name: 'Services', 
+    href: '/services',
+    icon: '⚡'
+  },
+  { 
+    name: 'Solutions', 
+    href: '/solutions',
+    description: 'Comprehensive IT solutions tailored to transform your business operations',
+    icon: '💡',
     children: [
-      { name: 'Salesforce Developers / Admins', href: '/roles#salesforce' },
-      { name: 'Cloud Engineers', href: '/roles#cloud' },
-      { name: 'AI Engineers', href: '/roles#ai' },
-      { name: 'Software Developers', href: '/roles#software' },
-      { name: 'QA & Support Engineers', href: '/roles#qa' },
+      { 
+        name: 'Digital Transformation', 
+        href: '/solutions#digital-transformation',
+        // description: 'Modernize your business with cutting-edge digital solutions'
+      },
+      { 
+        name: 'Cloud Migration', 
+        href: '/solutions#cloud-migration',
+        // description: 'Seamless migration to cloud infrastructure'
+      },
+      { 
+        name: 'AI Integration', 
+        href: '/solutions#ai-integration',
+        // description: 'Integrate AI solutions into your workflows'
+      }
     ]
   },
-  { name: 'Industries', href: '/industries' },
-  { name: 'Partners', href: '/partners' },
-  { name: 'Careers', href: '/careers' },
-  { name: 'Contact Us', href: '/contact' },
+  { 
+    name: 'Portfolio', 
+    href: '/portfolio',
+    // description: 'Explore our successful projects and client success stories',
+    icon: '📊'
+  },
+  { 
+    name: 'More', 
+    href: '#',
+    icon: '📋',
+    children: [
+      { 
+        name: 'Industries', 
+        href: '/industries',
+        // description: 'Serving diverse industries with specialized expertise'
+      },
+      { 
+        name: 'Partners', 
+        href: '/partners',
+        // description: 'Our trusted partners and technology alliances'
+      },
+      { 
+        name: 'Careers', 
+        href: '/careers',
+        // description: 'Join our growing team of IT professionals'
+      },
+      { 
+        name: 'Contact', 
+        href: '/contact',
+        // description: 'Get in touch with our expert team'
+      },
+    ]
+  },
 ]
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
+  const handleDropdownToggle = (name: string) => {
+    setActiveDropdown(activeDropdown === name ? null : name)
+  }
+
+  const closeDropdown = () => {
+    setActiveDropdown(null)
+  }
 
   return (
-    <motion.header 
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    <header 
+      className={cn(
+        "sticky top-0 z-50 w-full border-b backdrop-blur-md",
+        isDarkMode ? "bg-gray-900/95 border-gray-800/50" : "bg-white/95 border-gray-200/50",
+        "shadow-lg"
+      )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Global">
         <div className="flex h-16 items-center justify-between">
-          <motion.div 
-            className="flex items-center"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-          <Logo />
-        </motion.div>
+          <div className="flex items-center">
+            <Logo />
+          </div>
           
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {navigation.map((item, index) => (
-              <motion.div 
+              <div 
                 key={item.name} 
-                className="relative group"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={cn(
+                  "relative group",
+                  "transition-all duration-300 hover:scale-105"
+                )}
               >
                 {item.children ? (
-                  <div className="relative">
+                  <div
+                    className={cn(
+                      "relative",
+                      "transition-all duration-300"
+                    )}
+                  >
                     <Link
                       href={item.href}
-                      className="flex items-center space-x-1 text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105"
+                      className={cn(
+                        "flex items-center text-sm font-medium px-4 py-2 rounded-lg",
+                        "transition-all duration-300",
+                        "hover:scale-105",
+                        isDarkMode ? "text-gray-300 hover:text-white hover:bg-gray-700" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                      )}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleDropdownToggle(item.name)
+                      }}
                     >
-                      <span>{item.name}</span>
-                      <motion.div
-                        animate={{ rotate: 0 }}
-                        whileHover={{ rotate: 180 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ChevronDown className="h-4 w-4" />
-                      </motion.div>
+                      <span className="mr-2">{item.icon}</span>
+                      {item.name}
+                      <ChevronDown className={cn(
+                        "ml-1 h-4 w-4 transition-transform duration-200",
+                        activeDropdown === item.name ? "rotate-180" : ""
+                      )} />
                     </Link>
-                    <motion.div 
-                      className="absolute left-0 mt-2 w-64 rounded-md bg-background shadow-lg ring-1 ring-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 origin-top"
-                      initial={{ scale: 0.95, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false }}
-                    >
-                      <div className="py-2">
-                        {item.children.map((child, childIndex) => (
-                          <motion.div
-                            key={child.name}
-                            initial={{ opacity: 0, x: -10 }}
-                            whileHover={{ x: 5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Link
-                              href={child.href}
-                              className="block px-4 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:pl-6"
-                            >
-                              {child.name}
-                            </Link>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
                   </div>
                 ) : (
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
+                  <div
+                    className={cn(
+                      "relative",
+                      "transition-all duration-300"
+                    )}
                   >
                     <Link
                       href={item.href}
-                      className="text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105"
+                      className={cn(
+                        "flex items-center text-sm font-medium px-4 py-2 rounded-lg",
+                        "transition-all duration-300",
+                        "hover:scale-105",
+                        isDarkMode ? "text-gray-300 hover:text-white hover:bg-gray-700" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                      )}
                     >
+                      <span className="mr-2">{item.icon}</span>
                       {item.name}
                     </Link>
-                  </motion.div>
+                  </div>
                 )}
-              </motion.div>
-            ))}
-          </div>
 
-          <motion.div 
-            className="hidden lg:flex lg:items-center"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-          >
-            <Button asChild className="group">
-              <Link href="/contact" className="transition-all duration-300 hover:scale-105">
-                Get Started
-              </Link>
-            </Button>
-          </motion.div>
-
-          <motion.div 
-            className="flex lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-muted-foreground hover:bg-accent transition-colors duration-200"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              <AnimatePresence mode="wait">
-                {mobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -180, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 180, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                {/* Enhanced Dropdown Menu */}
+                {activeDropdown === item.name && (
+                  <div
+                    className={cn(
+                      "absolute top-full left-0 mt-2 w-80 rounded-xl shadow-2xl border overflow-hidden",
+                      "backdrop-blur-xl",
+                      isDarkMode ? "bg-gray-800/95 border-gray-700/50" : "bg-white/95 border-gray-200/50",
+                      "transform transition-all duration-300"
+                    )}
                   >
-                    <X className="h-6 w-6" aria-hidden="true" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 180, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -180, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Menu className="h-6 w-6" aria-hidden="true" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-          </motion.div>
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div 
-            className="lg:hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="space-y-1 px-4 pb-3 pt-2">
-              {navigation.map((item, index) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <div>
                     {item.children ? (
-                      <div className="space-y-1">
-                        <div className="px-3 py-2 text-sm font-medium text-muted-foreground">
-                          {item.name}
-                        </div>
-                        <div className="pl-6 space-y-1">
-                          {item.children.map((child) => (
-                            <motion.div
+                      <div className="p-4">
+                        <h4 className={cn(
+                          "text-sm font-semibold mb-3 px-2",
+                          isDarkMode ? "text-gray-200" : "text-gray-700"
+                        )}>
+                          {item.description}
+                        </h4>
+                        <div className="space-y-2">
+                          {item.children.map((child, childIndex) => (
+                            <Link
                               key={child.name}
-                              whileHover={{ x: 5 }}
-                              transition={{ duration: 0.2 }}
+                              href={child.href}
+                              className={cn(
+                                "flex items-center px-4 py-3 text-sm rounded-lg",
+                                "transition-all duration-300",
+                                "hover:scale-105",
+                                isDarkMode 
+                                  ? "text-gray-300 hover:bg-gray-700 hover:text-white" 
+                                  : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                              )}
                             >
-                              <Link
-                                href={child.href}
-                                className="block px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-all duration-200"
-                                onClick={() => setMobileMenuOpen(false)}
-                              >
-                                {child.name}
-                              </Link>
-                            </motion.div>
+                              <span className="mr-3">📄</span>
+                              <div>
+                                <div className="font-medium">{child.name}</div>
+                              </div>
+                            </Link>
                           ))}
                         </div>
                       </div>
                     ) : (
-                      <motion.div
-                        whileHover={{ x: 5 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Link
-                          href={item.href}
-                          className="block px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-all duration-200"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                      </motion.div>
+                      <div className="p-4">
+                        <div className={cn(
+                          "text-sm",
+                          isDarkMode ? "text-gray-300" : "text-gray-700"
+                        )}>
+                          {item.description}
+                        </div>
+                      </div>
                     )}
                   </div>
-                </motion.div>
-              ))}
-              <motion.div 
-                className="px-3 py-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-              >
-                <Button asChild className="w-full">
-                  <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+            {/* Connect With Us Button */}
+            <button
+              onClick={() => window.location.href = '/contact'}
+              className={cn(
+                "px-6 py-2 text-sm font-medium rounded-lg",
+                "transition-all duration-300",
+                "hover:scale-105",
+                isDarkMode 
+                  ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
+              )}
+            >
+              Connect With Us
+            </button>
+
+            {/* Dark/Light Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className={cn(
+                "p-2 rounded-lg transition-all duration-300",
+                "hover:scale-110",
+                isDarkMode ? "bg-gray-800 hover:bg-gray-700" : "bg-gray-200 hover:bg-gray-300"
+              )}
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-yellow-400" />
+              ) : (
+                <Moon className="h-5 w-5 text-gray-600" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="lg:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={cn(
+                "p-2 rounded-lg transition-all duration-300",
+                "hover:scale-110"
+              )}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className={cn(
+          "lg:hidden",
+          isMobileMenuOpen ? "block" : "hidden"
+        )}>
+          <div className={cn(
+            "px-2 pt-2 pb-3 space-y-1",
+            isDarkMode ? "bg-gray-900/95" : "bg-white/95"
+          )}>
+            {navigation.map((item) => (
+              <div key={item.name}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "block px-3 py-2 rounded-md text-base font-medium",
+                    "transition-all duration-300",
+                    "hover:scale-105",
+                    isDarkMode 
+                      ? "text-gray-300 hover:bg-gray-700 hover:text-white" 
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="mr-2">{item.icon}</span>
+                  {item.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </header>
   )
 }

@@ -23,7 +23,7 @@ export default function Logo() {
       </motion.div>
       <div className="flex flex-col">
         <motion.span 
-          className="text-xl font-bold text-foreground leading-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+          className="text-xl font-bold text-foreground leading-tight"
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 400 }}
         >
@@ -34,7 +34,7 @@ export default function Logo() {
           whileHover={{ scale: 1.02 }}
           transition={{ type: "spring", stiffness: 400 }}
         >
-          BRIDGE SOLUTIONS PVT.LTD
+          BRIDGE SOLUTIONS
         </motion.span>
       </div>
     </Link>

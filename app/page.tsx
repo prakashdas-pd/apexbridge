@@ -6,7 +6,6 @@ import { ArrowRight, Users, Cloud, Brain, Code, Shield, CheckCircle, Star, Trend
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import TestimonialSlider from '@/components/sections/testimonial-slider'
-import ROICalculator from '@/components/sections/roi-calculator'
 import BookingSystem from '@/components/sections/booking-system'
 
 const services = [
@@ -14,19 +13,37 @@ const services = [
     icon: Users,
     title: 'IT Staff Augmentation',
     description: 'Skilled IT professionals on contract with flexible hiring options and quick joining resources.',
-    href: '/services'
+    href: '/services',
+    keyFeatures: [
+      'Flexible hiring models',
+      'Quick joining resources',
+      'Skilled IT professionals',
+      'Cost-effective solutions'
+    ]
   },
   {
     icon: Cloud,
     title: 'Salesforce Services',
     description: 'Complete Salesforce setup, customization, support, and integration solutions for your business.',
-    href: '/services#salesforce'
+    href: '/services#salesforce',
+    keyFeatures: [
+      'Custom Salesforce setup',
+      'Integration with 3rd parties',
+      'Ongoing support and maintenance',
+      'Custom app development'
+    ]
   },
   {
     icon: Brain,
     title: 'Cloud & AI Services',
     description: 'Cloud setup, management, AI automation, and intelligent chatbot solutions.',
-    href: '/services#cloud-ai'
+    href: '/services#cloud-ai',
+    keyFeatures: [
+      'Cloud infrastructure setup',
+      'AI automation solutions',
+      'Intelligent chatbots',
+      'Data analytics platforms'
+    ]
   }
 ]
 
@@ -49,15 +66,31 @@ export default function Home() {
   return (
     <div className="space-y-20">
       {/* Hero Section */}
-      <section id="hero" className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <section id="hero" className="relative overflow-hidden">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/video2.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          {/* Light overlay for better text readability */}
+          <div className="absolute inset-0 " />
+        </div>
+        
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+              <h1 className="text-4xl lg:text-6xl font-bold  text-white mb-6 leading-tight">
                 Connecting Top
                 <span className="gradient-text"> IT Talent</span>
                 <br />
@@ -78,25 +111,6 @@ export default function Home() {
                 <Button size="lg" variant="outline" asChild>
                   <Link href="/services">Our Services</Link>
                 </Button>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="grid grid-cols-2 gap-4">
-                {stats.map((stat, index) => (
-                  <Card key={index} className="text-center">
-                    <CardContent className="p-6">
-                      <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
-                      <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                      <div className="text-sm text-muted-foreground">{stat.label}</div>
-                    </CardContent>
-                  </Card>
-                ))}
               </div>
             </motion.div>
           </div>
@@ -141,9 +155,19 @@ export default function Home() {
                     <CardDescription className="text-base mb-4">
                       {service.description}
                     </CardDescription>
+                    <div>
+                      <h4 className="text-lg font-semibold text-foreground mb-3">Key Features:</h4>
+                      <ul className="space-y-1">
+                        {service.keyFeatures.slice(0, 3).map((feature, index) => (
+                          <li key={index} className="text-sm text-muted-foreground flex items-center">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                     <Button variant="ghost" asChild className="p-0 h-auto">
                       <Link href={service.href} className="flex items-center text-primary hover:underline">
-                        Learn More
                         <ArrowRight className="ml-1 h-4 w-4" />
                       </Link>
                     </Button>
@@ -255,9 +279,7 @@ export default function Home() {
         <TestimonialSlider />
       </section>
 
-      {/* ROI Calculator Section */}
-      <ROICalculator />
-
+      
       {/* CTA Section */}
       <section id="contact" className="py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">

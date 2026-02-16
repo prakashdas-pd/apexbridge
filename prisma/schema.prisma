@@ -1,0 +1,184 @@
+// Database schema for Apex Bridge Solutions
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Users and Authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String   // Hashed password
+  role      String   @default("USER") // "ADMIN" | "USER" | "STAFF"
+  company   String?
+  phone     String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  contacts     Contact[]
+  bookings     Booking[]
+  inquiries    ServiceInquiry[]
+
+  @@map("users")
+}
+
+// Contact Form Submissions
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  service   String   // "STAFF_AUGMENTATION" | "SALESFORCE" | "CLOUD_AI" | "CONSULTATION" | "OTHER"
+  message   String
+  budget    String?
+  status    String   @default("NEW") // "NEW" | "CONTACTED" | "QUALIFIED" | "CONVERTED" | "CLOSED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("contacts")
+}
+
+// Service Inquiries
+model ServiceInquiry {
+  id           String   @id @default(cuid())
+  serviceType  String   // "STAFF_AUGMENTATION" | "SALESFORCE" | "CLOUD_AI" | "CONSULTATION" | "OTHER"
+  requirements String   // JSON string of requirements
+  budget       String?
+  timeline     String?
+  status       String   @default("NEW") // "NEW" | "REVIEWING" | "QUOTE_SENT" | "NEGOTIATING" | "ACCEPTED" | "REJECTED"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("service_inquiries")
+}
+
+// Booking/Consultation System
+model Booking {
+  id           String      @id @default(cuid())
+  name         String
+  email        String
+  phone        String
+  company      String?
+  serviceType  String      // "STAFF_AUGMENTATION" | "SALESFORCE" | "CLOUD_AI" | "CONSULTATION" | "OTHER"
+  preferredDate DateTime
+  preferredTime String
+  timezone     String
+  meetingType  String      // "VIDEO_CALL" | "PHONE_CALL" | "IN_PERSON"
+  message      String?
+  status       String      @default("SCHEDULED") // "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED" | "RESCHEDULED"
+  meetingLink  String?
+  calendarId   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relations
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("bookings")
+}
+
+// Staff/Talent Management
+model Talent {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phone       String?
+  skills      String   // JSON string of skills array
+  experience  Int      // Years of experience
+  hourlyRate  Decimal?
+  availability String?
+  resume      String?  // URL to resume
+  portfolio   String?  // URL to portfolio
+  status      String   @default("AVAILABLE") // "AVAILABLE" | "BUSY" | "UNAVAILABLE" | "ON_LEAVE"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  assignments TalentAssignment[]
+
+  @@map("talent")
+}
+
+// Projects
+model Project {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  clientName  String
+  clientEmail String
+  serviceType  String      // "STAFF_AUGMENTATION" | "SALESFORCE" | "CLOUD_AI" | "CONSULTATION" | "OTHER"
+  budget      Decimal?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      String      @default("PLANNING") // "PLANNING" | "IN_PROGRESS" | "COMPLETED" | "ON_HOLD" | "CANCELLED"
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  assignments TalentAssignment[]
+
+  @@map("projects")
+}
+
+// Project-Talent Assignments
+model TalentAssignment {
+  id        String   @id @default(cuid())
+  projectId String
+  talentId  String
+  role      String
+  startDate DateTime
+  endDate   DateTime?
+  hourlyRate Decimal
+  createdAt DateTime @default(now())
+
+  // Relations
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  talent  Talent  @relation(fields: [talentId], references: [id], onDelete: Cascade)
+
+  @@map("talent_assignments")
+}
+
+// Testimonials
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  company   String
+  position  String
+  content   String
+  rating    Int      @default(5)
+  avatar    String?
+  featured  Boolean  @default(false)
+  status    String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// System Settings
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}

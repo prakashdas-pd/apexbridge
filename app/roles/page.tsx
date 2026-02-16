@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowRight, Users, Cloud, Brain, Code, Shield, CheckCircle, Star, Briefcase, Zap, Database } from 'lucide-react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowRight, Users, Cloud, Brain, Code, Shield, CheckCircle, Star, Briefcase, Zap, Database, X, Clock, MapPin, DollarSign, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -148,6 +149,19 @@ const benefits = [
 ]
 
 export default function Roles() {
+  const [selectedRole, setSelectedRole] = useState<any>(null)
+  const [selectedCategory, setSelectedCategory] = useState<any>(null)
+
+  const handleRoleClick = (role: any, category: any) => {
+    setSelectedRole(role)
+    setSelectedCategory(category)
+  }
+
+  const closeModal = () => {
+    setSelectedRole(null)
+    setSelectedCategory(null)
+  }
+
   return (
     <div className="space-y-20">
       {/* Hero Section */}
@@ -183,7 +197,7 @@ export default function Roles() {
               viewport={{ once: true }}
               className="mb-20 last:mb-0"
             >
-              <div className="text-center mb-12">
+              <div className="text-center mb-12" id={category.id}>
                 <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-6">
                   <category.icon className="h-8 w-8 text-primary" />
                 </div>
@@ -197,37 +211,178 @@ export default function Roles() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {category.roles.map((role, roleIndex) => (
-                  <Card key={roleIndex} className="h-full hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="text-xl">{role.title}</CardTitle>
-                      <CardDescription className="text-base leading-relaxed">
-                        {role.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold text-foreground mb-3">Key Skills:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {role.skills.map((skill, skillIndex) => (
-                              <span
-                                key={skillIndex}
-                                className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full"
-                              >
-                                {skill}
-                              </span>
-                            ))}
+                  <motion.div
+                    key={roleIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: roleIndex * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <Card 
+                      className="h-full hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                      onClick={() => handleRoleClick(role, category)}
+                    >
+                      <CardHeader>
+                        <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                          {role.title}
+                        </CardTitle>
+                        <CardDescription 
+                          className="text-base leading-relaxed line-clamp-3 group-hover:text-foreground transition-colors"
+                        >
+                          {role.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold text-foreground mb-3">Key Skills:</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {role.skills.map((skill, skillIndex) => (
+                                <span
+                                  key={skillIndex}
+                                  className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                                >
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex items-center text-sm text-muted-foreground group-hover:text-primary transition-colors">
+                            <span>Click to view details</span>
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
           ))}
         </div>
       </section>
+
+      {/* Role Detail Modal */}
+      <AnimatePresence>
+        {selectedRole && selectedCategory && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-background rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-2">
+                      {selectedRole.title}
+                    </h3>
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <selectedCategory.icon className="h-4 w-4 mr-2" />
+                      {selectedCategory.title}
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={closeModal}
+                    className="hover:bg-muted"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-3">Role Description</h4>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedRole.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-3">Key Skills & Technologies</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedRole.skills.map((skill: string, skillIndex: number) => (
+                        <span
+                          key={skillIndex}
+                          className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Briefcase className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Experience Level</p>
+                        <p className="font-medium">Mid to Senior Level</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Clock className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Availability</p>
+                        <p className="font-medium">Immediate Joining</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Location</p>
+                        <p className="font-medium">Remote & On-site</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Salary Range</p>
+                        <p className="font-medium">Competitive</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button size="lg" asChild className="flex-1">
+                        <Link href="/contact">
+                          Request This Role
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button size="lg" variant="outline" asChild className="flex-1">
+                        <Link href="/contact">
+                          View Similar Roles
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Benefits Section */}
       <section className="py-20 bg-muted/30">

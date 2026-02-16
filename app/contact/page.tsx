@@ -19,14 +19,14 @@ const contactInfo = [
   {
     icon: Phone,
     title: 'Call Us',
-    value: '+1 (555) 123-4567',
-    description: 'Monday to Friday, 9:00 AM - 6:00 PM PST',
-    href: 'tel:+15551234567'
+    value: '+91 (123) 456-7890',
+    description: 'Monday to Friday, 9:00 AM - 6:00 PM IST',
+    href: 'tel:+911234567890'
   },
   {
     icon: MapPin,
     title: 'Visit Us',
-    value: 'San Francisco, CA',
+    value: 'Nagpur, Maharashtra',
     description: 'Headquarters and main operations center',
     href: '#'
   }
@@ -34,24 +34,24 @@ const contactInfo = [
 
 const officeLocations = [
   {
-    city: 'San Francisco',
-    address: '123 Market Street, Suite 100',
-    state: 'CA 94105',
-    phone: '+1 (555) 123-4567',
-    email: 'sf@apexbridgesolutions.com'
+    city: 'Nagpur',
+    address: '123 Wardha Road, IT Park',
+    state: 'Maharashtra 440012',
+    phone: '+91 (123) 456-7890',
+    email: 'nagpur@apexbridgesolutions.com'
   },
   {
-    city: 'New York',
-    address: '456 Broadway, Floor 15',
-    state: 'NY 10013',
-    phone: '+1 (555) 987-6543',
-    email: 'ny@apexbridgesolutions.com'
+    city: 'Mumbai',
+    address: '456 Bandra Kurla Complex, Building A',
+    state: 'Maharashtra 400051',
+    phone: '+91 (987) 654-3210',
+    email: 'mumbai@apexbridgesolutions.com'
   },
   {
     city: 'Remote',
     address: 'Global Team',
     state: 'Available Worldwide',
-    phone: '+1 (555) 123-4567',
+    phone: '+91 (123) 456-7890',
     email: 'remote@apexbridgesolutions.com'
   }
 ]

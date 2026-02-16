@@ -5,7 +5,6 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import FloatingActions from "@/components/layout/floating-actions";
 import LiveChat from "@/components/layout/live-chat";
-import ProgressIndicator from "@/components/layout/progress-indicator";
 import BookingSystem from "@/components/sections/booking-system";
 
 const geistSans = Geist({
@@ -41,7 +40,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <ProgressIndicator />
         <Header />
         <main className="flex-1">
           {children}
